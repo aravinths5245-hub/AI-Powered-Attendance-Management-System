@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block page_title %}Analytics{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="glass-card p-4">
+            <h4 class="mb-3">Attendance Trends</h4>
+            <div class="chart-placeholder">
+                <i class="fa-solid fa-chart-area"></i>
+                <p>Trend chart will render here.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="glass-card p-4">
+            <h4 class="mb-3">Department Performance</h4>
+            <div class="chart-placeholder">
+                <i class="fa-solid fa-chart-bar"></i>
+                <p>Department analytics will render here.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

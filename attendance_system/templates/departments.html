@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block page_title %}Departments{% endblock %}
+{% block content %}
+<div class="glass-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div><h4 class="mb-1">Departments</h4><p class="text-muted mb-0">Organize academic units and track their progress.</p></div>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDepartmentModal"><i class="fa-solid fa-school"></i> Add Department</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Name</th><th>Code</th><th>Head</th><th>Students</th><th>Actions</th></tr></thead>
+            <tbody>
+                {% for department in departments %}
+                <tr><td>{{ department.name }}</td><td>{{ department.code }}</td><td>—</td><td>Active</td><td><a href="{{ url_for('delete_department', department_id=department.id) }}" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></a></td></tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center text-muted">No departments yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="addDepartmentModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Add Department</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form method="post" action="{{ url_for('add_department') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-body row g-3">
+          <div class="col-12"><input class="form-control" name="name" placeholder="Department Name" required></div>
+          <div class="col-12"><input class="form-control" name="code" placeholder="Department Code" required></div>
+          <div class="col-12"><input class="form-control" name="head_name" placeholder="Department Head"></div>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><button type="submit" class="btn btn-primary">Save Department</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

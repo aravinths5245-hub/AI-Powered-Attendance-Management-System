@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block page_title %}Executive Dashboard{% endblock %}
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="icon blue"><i class="fa-solid fa-users"></i></div>
+            <div><h3>{{ students }}</h3><p>Total Students</p></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="icon green"><i class="fa-solid fa-check"></i></div>
+            <div><h3>{{ present }}</h3><p>Present Today</p></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="icon red"><i class="fa-solid fa-xmark"></i></div>
+            <div><h3>{{ absent }}</h3><p>Absent Today</p></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="icon orange"><i class="fa-solid fa-percent"></i></div>
+            <div><h3>{{ percent }}%</h3><p>Attendance Rate</p></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="glass-card p-4">
+            <div class="d-flex justify-content-between mb-3">
+                <div><h4 class="mb-1">Attendance Trend</h4><p class="text-muted mb-0">Last 6 days</p></div>
+                <span class="badge text-bg-primary">Live</span>
+            </div>
+            <canvas id="trendChart" height="180"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="glass-card p-4">
+            <h4 class="mb-3">Live Activity</h4>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Faculty accounts: {{ faculty }}</li>
+                <li class="list-group-item">Departments: {{ departments }}</li>
+                <li class="list-group-item">Late arrivals: {{ late }}</li>
+                <li class="list-group-item">Recent checks: {{ recent_records|length }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="glass-card p-4">
+            <h4 class="mb-3">Recent Activity</h4>
+            <div class="activity-list">
+                {% for entry in recent_activity %}
+                <div class="activity-item"><div class="activity-dot"></div><div><strong>{{ entry.action }}</strong><p class="mb-0 text-muted">{{ entry.details }}</p></div></div>
+                {% else %}
+                <p class="text-muted mb-0">No activity logged yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="glass-card p-4">
+            <h4 class="mb-3">Quick Actions</h4>
+            <div class="quick-actions">
+                <a href="{{ url_for('students') }}" class="btn btn-primary mb-2 w-100">Manage Students</a>
+                <a href="{{ url_for('attendance') }}" class="btn btn-outline-primary mb-2 w-100">Take Attendance</a>
+                <a href="{{ url_for('reports') }}" class="btn btn-outline-info w-100">Generate Reports</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const ctx = document.getElementById('trendChart');
+if (ctx) {
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ trend_labels|tojson }},
+      datasets:[{label:'Present', data: {{ trend_values|tojson }}, borderColor:'#2563EB', tension:0.3, fill:true, backgroundColor:'rgba(37,99,235,0.16)'}]
+    },
+    options:{responsive:true, plugins:{legend:{display:false}}}
+  });
+}
+</script>
+{% endblock %}

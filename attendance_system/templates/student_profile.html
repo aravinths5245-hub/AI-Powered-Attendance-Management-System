@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block page_title %}Student Profile{% endblock %}
+{% block content %}
+<div class="glass-card p-4">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h4 class="mb-1">{{ student.full_name }}</h4>
+            <p class="text-muted mb-0">{{ student.student_id }} • {{ student.department_id or 'No department' }}</p>
+        </div>
+        <a href="{{ url_for('students') }}" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="report-box h-100">
+                <h6 class="text-muted">Student Overview</h6>
+                <p class="mb-1"><strong>Email:</strong> {{ student.email or '—' }}</p>
+                <p class="mb-1"><strong>Phone:</strong> {{ student.phone or '—' }}</p>
+                <p class="mb-1"><strong>Status:</strong> <span class="badge text-bg-success">{{ student.status }}</span></p>
+                <p class="mb-0"><strong>Year:</strong> {{ student.year or '—' }}</p>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="report-box">
+                <h6 class="text-muted">Attendance Summary</h6>
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <h3 class="mb-0">{{ attendance_summary.present }}</h3>
+                        <small class="text-muted">Present</small>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 class="mb-0">{{ attendance_summary.absent }}</h3>
+                        <small class="text-muted">Absent</small>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 class="mb-0">{{ attendance_summary.rate }}%</h3>
+                        <small class="text-muted">Attendance Rate</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

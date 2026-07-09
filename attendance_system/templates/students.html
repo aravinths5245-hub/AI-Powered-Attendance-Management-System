@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block page_title %}Students{% endblock %}
+{% block content %}
+<div class="glass-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-1">Student Management</h4>
+            <p class="text-muted mb-0">Search, edit and manage student profiles.</p>
+        </div>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModal"><i class="fa-solid fa-user-plus"></i> Add Student</button>
+    </div>
+
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-8"><input class="form-control" name="q" placeholder="Search by name or student ID" value="{{ search_term }}"></div>
+        <div class="col-md-4"><button class="btn btn-outline-primary w-100">Search</button></div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Student ID</th><th>Name</th><th>Email</th><th>Department</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                {% for student in students.items %}
+                <tr>
+                    <td>{{ student.student_id }}</td>
+                    <td>{{ student.full_name }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.department_id }}</td>
+                    <td><span class="badge text-bg-success">{{ student.status }}</span></td>
+                    <td>
+                        <a href="{{ url_for('student_profile', student_id=student.id) }}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-eye"></i></a>
+                        <a href="{{ url_for('delete_student', student_id=student.id) }}" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center text-muted">No students found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if students.pages > 1 %}
+    <nav class="mt-3">
+        <ul class="pagination">
+            {% for page_num in students.iter_pages() %}
+            {% if page_num %}
+            <li class="page-item {% if page_num == students.page %}active{% endif %}"><a class="page-link" href="{{ url_for('students', page=page_num, q=search_term) }}">{{ page_num }}</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<div class="modal fade" id="addStudentModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Add Student</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form method="post" action="{{ url_for('add_student') }}" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-body row g-3">
+          <div class="col-md-6"><input class="form-control" name="student_id" placeholder="Student ID" required></div>
+          <div class="col-md-6"><input class="form-control" name="full_name" placeholder="Full Name" required></div>
+          <div class="col-md-6"><input class="form-control" name="email" type="email" placeholder="Email"></div>
+          <div class="col-md-6"><input class="form-control" name="phone" placeholder="Phone"></div>
+          <div class="col-md-6"><input class="form-control" name="department_id" placeholder="Department ID"></div>
+          <div class="col-md-6"><input class="form-control" name="course_id" placeholder="Course ID"></div>
+          <div class="col-md-6"><input class="form-control" name="year" placeholder="Year"></div>
+          <div class="col-md-6"><input class="form-control" type="file" name="photo" accept="image/*"></div>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><button type="submit" class="btn btn-primary">Save Student</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
